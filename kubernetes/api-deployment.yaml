@@ -5,7 +5,7 @@ metadata:
     kompose.cmd: kompose convert --build local
     kompose.image-pull-policy: Never
     kompose.service.type: nodeport
-    kompose.version: 1.32.0 (HEAD)
+    kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: api
   name: api
@@ -20,9 +20,8 @@ spec:
         kompose.cmd: kompose convert --build local
         kompose.image-pull-policy: Never
         kompose.service.type: nodeport
-        kompose.version: 1.32.0 (HEAD)
+        kompose.version: 1.36.0 (ae2a39403)
       labels:
-        io.kompose.network/kubernetes-default: "true"
         io.kompose.service: api
     spec:
       containers:
@@ -34,6 +33,5 @@ spec:
           name: api
           ports:
             - containerPort: 8080
-              hostPort: 8080
               protocol: TCP
       restartPolicy: Always

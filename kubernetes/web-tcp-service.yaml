@@ -6,7 +6,7 @@ metadata:
     kompose.image-pull-policy: Never
     kompose.service.expose: "true"
     kompose.service.type: LoadBalancer
-    kompose.version: 1.32.0 (HEAD)
+    kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: web-tcp
   name: web-tcp

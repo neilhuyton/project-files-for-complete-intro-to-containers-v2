@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert --build local
-    kompose.version: 1.32.0 (HEAD)
+    kompose.version: 1.36.0 (ae2a39403)
   labels:
     io.kompose.service: db
   name: db
@@ -16,9 +16,8 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert --build local
-        kompose.version: 1.32.0 (HEAD)
+        kompose.version: 1.36.0 (ae2a39403)
       labels:
-        io.kompose.network/kubernetes-default: "true"
         io.kompose.service: db
     spec:
       containers:
@@ -26,6 +25,5 @@ spec:
           name: db
           ports:
             - containerPort: 27017
-              hostPort: 27017
               protocol: TCP
       restartPolicy: Always
