@@ -1,37 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert --build local
-    kompose.image-pull-policy: Never
-    kompose.service.type: nodeport
-    kompose.version: 1.36.0 (ae2a39403)
-  labels:
-    io.kompose.service: api
   name: api
+  labels:
+    app: api
 spec:
-  replicas: 1
+  replicas: 1  # Reduced from 2
   selector:
     matchLabels:
-      io.kompose.service: api
+      app: api
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert --build local
-        kompose.image-pull-policy: Never
-        kompose.service.type: nodeport
-        kompose.version: 1.36.0 (ae2a39403)
       labels:
-        io.kompose.service: api
+        app: api
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nslookup db.default.svc.cluster.local; do echo waiting for db; sleep 2; done;']
       containers:
-        - env:
-            - name: MONGO_CONNECTION_STRING
-              value: mongodb://db:27017
-          image: api
-          imagePullPolicy: Never
-          name: api
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-      restartPolicy: Always
+      - name: api
+        image: us-central1-docker.pkg.dev/model-ripple-467310-c7/my-repo/api:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_CONNECTION_STRING
+          value: "mongodb://db.default.svc.cluster.local:27017/dockerApp"
+        resources:
+          requests:
+            cpu: "100m"  # Reduced from 500m
+            memory: "512Mi"  # Reduced from 2Gi
+            ephemeral-storage: "1Gi"
+          limits:
+            ephemeral-storage: "1Gi"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
